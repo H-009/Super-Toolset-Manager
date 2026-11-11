@@ -102,18 +102,6 @@ class MainUI(UiMixin,UpdateMixin,FluentWindow):
         self.skip_exit_save = JCP.get("config.json", ["setting","skip_exit_save"], False)
         # 配置文件保护
         self.config_file_protect = JCP.get("config.json", ["setting","config_file_protect"], True)
-        # 演示模式
-        self.demo_mode = JCP.get("config.json", ["setting","demo_mode"], False)
-        # 完整备份
-        self.full_backup = JCP.get("config.json", ["setting","full_backup"], False)
-        # 自动重载
-        self.auto_reload = JCP.get("config.json", ["setting","auto_reload"], True)
-        # 自动退出
-        self.auto_exit = JCP.get("config.json", ["setting","auto_exit"], False)
-        # 自动备份同步
-        self.auto_backup_sync = JCP.get("config.json", ["setting","auto_backup_sync"], True)
-        # 同步重载
-        self.sync_reload = JCP.get("config.json", ["setting","sync_reload"], True)
         # 排序池
         self.sort_jcp_pool = JCP.get("config.json", ["setting","sort_jcp_pool"], False)
 
@@ -250,24 +238,22 @@ class MainUI(UiMixin,UpdateMixin,FluentWindow):
     def closeEvent(self, event):
         super().closeEvent(event)
 
-        # 不在演示模式中
-        if not self.demo_mode:
-            # 跳过退出保存
-            if self.skip_exit_save:
-                # 判断是否修改
-                # 池中Json
-                new_json = JCP.read("config.json")
-                # 本地Json
-                old_json = JsonConfigTool.read_json("config.json")
-                # 是否相同
-                same = JsonConfigTool.json_equal(new_json,old_json)
-                # 不相同
-                if not same:
-                    # 保存池
-                    JCP.save()
-            else:
+        # 跳过退出保存
+        if self.skip_exit_save:
+            # 判断是否修改
+            # 池中Json
+            new_json = JCP.read("config.json")
+            # 本地Json
+            old_json = JsonConfigTool.read_json("config.json")
+            # 是否相同
+            same = JsonConfigTool.json_equal(new_json,old_json)
+            # 不相同
+            if not same:
                 # 保存池
                 JCP.save()
+        else:
+            # 保存池
+            JCP.save()
 
     # 更新主题模式
     def update_theme_model(self, theme):
@@ -550,110 +536,3 @@ if __name__ == "__main__":
 
 # ff29f1ff
 # ff009faa
-
-# 在启动页面关闭时 执行 强制关闭 拒绝关闭 隐藏控制按钮
-
-# 紧急修复 和一次性通知
-
-# 内存泄漏调试器
-# objgraph.show_growth()
-
-# 背景音乐 枚举值 MUSIC
-
-#downloadBadge 徽章终点位置
-
-#table.verticalHeader().hide() # 隐藏表头 / 表格头图标
-
-# 环境表格更新是否联动环境树
-# 编辑是否继承
-
-# 备份与恢复 公告 重置
-# 内部信息
-
-# 去掉外部cmd创建 配置创建后续待验证
-
-# 禁用侧边栏指示器滑动动画
-# self.navigationInterface.setIndicatorAnimationEnabled(False)
-
-# 自定义背景颜色
-# self.setCustomBackgroundColor(QColor(73, 156, 84), QColor(25, 33, 42))
-
-# from BlurWindow.blurWindow import GlobalBlur 透明亚克力
-# GlobalBlur(self.winId(),Acrylic=True,Dark=True, QWidget=self)
-
-# 窗口自定义分辨率
-
-# CMD std流历史 当前cmd详情
-
-# 全局控制台 使用持续嵌入 意外退出重启控制台
-
-# 各个cmd 控制台状态 加入图表
-
-# 选择配置文件优先 APPDATA还是工作目录的配置
-
-# 徽章跟随强调色
-
-# 工作站工作模式 源码/程序/虚拟环境
-
-# 自动配置查找环境 和 依据树查找cmd改为用 item data存的唯一值
-
-# 读取版本信息
-# JCP.get("config.json", ["info", "version"], "LIGHT")
-
-# 控制台自动配置名称
-# 控制台自动创建
-
-# 自检
-# 扫描环境
-
-# 创建-别名 venv python embed uv
-
-# 路径不统bug
-
-# 文件锁
-
-# 虚拟环境快照
-
-# 开启cmd后 布局刷新策略变更
-# 图标有时失效
-
-# ex_style |= (
-#         win32con.WS_EX_TOOLWINDOW | win32con.WS_EX_NOACTIVATE
-# )
-# 去前台焦点 GWL_EXSTYLE 设置
-#
-# WS_EX_TOOLWINDOW
-# Window Style Extended Tool Window
-# 不显示在任务栏/Alt+Tab
-# WS_EX_NOACTIVATE
-# Window Style Extended No Activate
-# 点击不抢焦点
-# WS_EX_WINDOWEDGE
-# Window Style Extended Window Edge
-# 立体边框（你已去掉）
-
-# items = ['shoko', '西宫硝子', '宝多六花', '小鸟游六花']
-# completer = QCompleter(items, self.download_version_combox)
-#
-# # 设置显示的选项数
-# completer.setMaxVisibleItems(10)
-#
-# # 设置补全器
-# self.download_version_combox.setCompleter(completer)
-# # 补全
-
-# 更换编辑下拉框 默认回车添加新控件
-
-# 强制退出关闭计时
-
-# 下载列表快导致徽章计时多2
-
-# 配置同步 把配置放到appdata
-
-# 自动保存
-
-# 工具集
-
-# 配置模式与立即克隆配置到同步文件夹
-
-# 安装成功 匹配成功视为异步操作

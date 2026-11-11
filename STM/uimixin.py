@@ -746,12 +746,12 @@ class UiMixin(_MixinBase):
         # Github标题
         self.setting_view_layout.addWidget(BodyLabel("Github"))
         # Github卡片
-        card = LayoutHyperlinkButtonSettingCard(FluentIcon.GITHUB,"仓库页","前往VEM仓库页","前往",UrlBuilder.GithubRepo(ContributorKey.H009,RepoKey.VEM))
+        card = LayoutHyperlinkButtonSettingCard(FluentIcon.GITHUB,"仓库页","前往STM仓库页","前往",UrlBuilder.GithubRepo(ContributorKey.H009,RepoKey.STM))
         self.setting_view_layout.addWidget(card)  # 添加卡片到滚动窗口
-        card = LayoutHyperlinkButtonSettingCard(FluentIcon.GITHUB,"发布页","前往VEM发布页","前往",UrlBuilder.GithubRepoReleases(ContributorKey.H009,RepoKey.VEM))
+        card = LayoutHyperlinkButtonSettingCard(FluentIcon.GITHUB,"发布页","前往STM发布页","前往",UrlBuilder.GithubRepoReleases(ContributorKey.H009,RepoKey.STM))
         self.setting_view_layout.addWidget(card)
-        card = LayoutPrimaryButtonSettingCard(FluentIcon.GITHUB,"提交反馈","通过提交反馈帮助改进VEM","提交反馈")
-        card.clickedChanged.connect(lambda :QDesktopServices.openUrl(QUrl(UrlBuilder.GithubRepoIssues(ContributorKey.H009,RepoKey.VEM))))
+        card = LayoutPrimaryButtonSettingCard(FluentIcon.GITHUB,"提交反馈","通过提交反馈帮助改进STM","提交反馈")
+        card.clickedChanged.connect(lambda :QDesktopServices.openUrl(QUrl(UrlBuilder.GithubRepoIssues(ContributorKey.H009,RepoKey.STM))))
         self.setting_view_layout.addWidget(card)
         card = LayoutPrimaryButtonSettingCard(FluentIcon.GITHUB,"检查更新","检查是否有可用更新","检查更新")
         card.clickedChanged.connect(self.get_new_version)
@@ -803,76 +803,6 @@ class UiMixin(_MixinBase):
         # 删除配置卡片
         card = LayoutDangerButtonSettingCard(FluentIcon.SETTING,"删除配置","删除配置文件并清空配置池","删除配置")
         card.clickedChanged.connect(self.delete_config_file)
-        self.setting_view_layout.addWidget(card)
-
-        # 间隔弹簧
-        self.setting_view_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
-
-        # 备份标题
-        self.setting_view_layout.addWidget(BodyLabel("备份"))
-        # 关闭便携式环境的脱控通知卡片
-        self.backup_path_card = LayoutButtonSettingCard(FluentIcon.HISTORY,"备份路径",self.backup_path,"选择路径")
-        self.backup_path_card.clickedChanged.connect(self.update_backup_path)
-        self.setting_view_layout.addWidget(self.backup_path_card)
-        # 恢复默认备份路径卡片
-        card = LayoutButtonSettingCard(FluentIcon.HISTORY,"恢复默认备份路径","恢复当前路径默认备份路径","恢复默认")
-        card.clickedChanged.connect(self.restore_default_backup_path)
-        self.setting_view_layout.addWidget(card)
-        # 完整备份卡片
-        card = LayoutSwitchButtonSettingCard(FluentIcon.HISTORY,"完整备份","同时保存文件元数据")
-        card.setChecked(self.full_backup)
-        card.checkedChanged.connect(self.update_full_backup)
-        self.setting_view_layout.addWidget(card)
-        # 备份配置卡片
-        card = LayoutPrimaryButtonSettingCard(FluentIcon.HISTORY,"备份配置","立即备份当前配置文件","立即备份")
-        card.clickedChanged.connect(self.backup_config_file)
-        self.setting_view_layout.addWidget(card)
-
-        # 间隔弹簧
-        self.setting_view_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
-
-        # 备份标题
-        self.setting_view_layout.addWidget(BodyLabel("恢复"))
-        # 恢复默认备份路径卡片
-        card = LayoutButtonSettingCard(MetaverseFluentIcon.Redo,"恢复备份","从备份中恢复","恢复")
-        card.clickedChanged.connect(self.restore_backup)
-        self.setting_view_layout.addWidget(card)
-        # 自动重载池卡片
-        card = LayoutSwitchButtonSettingCard(MetaverseFluentIcon.Redo,"自动重载","恢复备份后自动重载池")
-        card.setChecked(self.auto_reload)
-        card.checkedChanged.connect(self.update_auto_reload)
-        self.setting_view_layout.addWidget(card)
-        # 自动退出卡片
-        card = LayoutSwitchButtonSettingCard(MetaverseFluentIcon.Redo,"自动退出","恢复备份后自动强制退出")
-        card.setChecked(self.auto_exit)
-        card.checkedChanged.connect(self.update_auto_exit)
-        self.setting_view_layout.addWidget(card)
-
-        # 间隔弹簧
-        self.setting_view_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
-
-        # 同步标题
-        self.setting_view_layout.addWidget(BodyLabel("同步"))
-        # 同步路径卡片
-        card = LayoutSettingCard(MetaverseFluentIcon.DataBaseSync,"同步路径",self.APPDATA_ROAMING)
-        self.setting_view_layout.addWidget(card)
-        # 数据持久化卡片
-        card = LayoutButtonSettingCard(MetaverseFluentIcon.DataBaseSync,"同步本地","从VEM同步到本地","同步")
-        card.clickedChanged.connect(self.sync_loca)
-        self.setting_view_layout.addWidget(card)
-        # 配置同步卡片
-        card = LayoutButtonSettingCard(MetaverseFluentIcon.DataBaseSync,"同步配置","从本地同步到VEM","同步")
-        card.clickedChanged.connect(self.sync_config)
-        self.setting_view_layout.addWidget(card)
-        # 自动备份同步卡片
-        card = LayoutSwitchButtonSettingCard(MetaverseFluentIcon.DataBaseSync,"自动备份同步","同步配置时自动备份旧配置")
-        card.setChecked(self.auto_backup_sync)
-        card.checkedChanged.connect(self.update_auto_backup_sync)
-        self.setting_view_layout.addWidget(card)
-        # 同步池卡片
-        card = LayoutSwitchButtonSettingCard(MetaverseFluentIcon.DataBaseSync,"同步重载","同步配置时自动同步池")
-        card.setChecked(self.sync_reload)
-        card.checkedChanged.connect(self.update_sync_reload)
         self.setting_view_layout.addWidget(card)
 
         # 间隔弹簧
