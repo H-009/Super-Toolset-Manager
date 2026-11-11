@@ -73,10 +73,10 @@ class UiMixin(_MixinBase):
         add_btn.clicked.connect(lambda :self.stackedWidget.setCurrentWidget(self.Created))
         btn_layout.addWidget(add_btn, alignment=Qt.AlignCenter)
 
-        iot_btn = PushButton("环境")
+        iot_btn = PushButton("命令面板")
         iot_btn.setIcon(FluentIcon.IOT)
-        iot_btn.setFixedWidth(100)
-        iot_btn.clicked.connect(lambda :self.stackedWidget.setCurrentWidget(self.VenvManage))
+        iot_btn.setFixedWidth(120)
+        iot_btn.clicked.connect(lambda :self.stackedWidget.setCurrentWidget(self.CommandPanel))
         btn_layout.addWidget(iot_btn, alignment=Qt.AlignCenter)
 
         # 居中弹簧
@@ -86,13 +86,31 @@ class UiMixin(_MixinBase):
         # 底部弹簧
         vlayout.addItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
-    # 初始化环境管理
+    # 初始化命令面板
     def init_command_panel(self):
         # 嵌入垂直布局
         vlayout = QHBoxLayout(self.CommandPanel)
 
-        self.cmd = CmdCommandPanel()
+        cmd_model = {
+            "stm": r"D:\stm.exe",
+            "flash": r"D:\flash_tool.exe",
+            "erase": r"D:\erase_tool.exe",
+            "gu": r"C:\Users\Admin_06\Desktop\Geek Uninstaller.exe",
+            "b64": r"G:\X3\b64.exe",
+            "lx": r"D:\LxMuxic\lx-music-desktop\lx-music-desktop.exe",
+            "sn": r"C:\Users\Admin_06\Desktop\SpaceSniffer.exe"
+        }
+
+        self.cmd = CmdCommandPanel(model_name="STM",commands=cmd_model)
         vlayout.addWidget(self.cmd)
+
+    # 初始化控制面板
+    def init_control_panel(self):
+        # 嵌入垂直布局
+        vlayout = QHBoxLayout(self.ControlPanel)
+
+        self.control = CmdCommandPanel()
+        vlayout.addWidget(self.control)
 
     # 初始化虚拟环境
     def init_venv(self):
@@ -662,10 +680,6 @@ class UiMixin(_MixinBase):
         self.sstartup_ico_size_card.activated.connect(self.update_startup_ico_size)
         self.update_set_startup_ico_size_ico() # 更新图标
         self.setting_view_layout.addWidget(self.sstartup_ico_size_card)
-        # 关闭启动延迟卡片
-        card = LayoutButtonSettingCard(FluentIcon.SPEED_HIGH, "关闭启动延迟", "关闭有关启动延时的设置","关闭延时")
-        card.clickedChanged.connect(self.update_close_startup_delay)
-        self.setting_view_layout.addWidget(card)  # 添加卡片到滚动窗口
         # 图标阴影卡片
         card = LayoutSwitchButtonSettingCard(FluentIcon.TRANSPARENT,"图标阴影","启动页面图标阴影效果")
         card.setChecked(self.startup_ico_shadow)
@@ -706,9 +720,6 @@ class UiMixin(_MixinBase):
 
         # 关于标题
         self.setting_view_layout.addWidget(BodyLabel("关于"))
-        # CMD卡片
-        card = LayoutSettingCard(FluentIcon.COMMAND_PROMPT, "CMD", f"CMD命令面板 {self.CMD_Version}")
-        self.setting_view_layout.addWidget(card)  # 添加卡片到滚动窗口
         # QFluentWidgets卡片
         card = LayoutSettingCard(QIcon(":/qfluentwidgets/images/logo.png"), "QFluentWidgets", f"版本 v{QFW__version__}")
         self.setting_view_layout.addWidget(card)  # 添加卡片到滚动窗口

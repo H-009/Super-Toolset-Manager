@@ -42,8 +42,7 @@ class MainUI(UiMixin,UpdateMixin,FluentWindow):
         self.twist_theme_map = {"LIGHT": "明亮", "DARK": "黑暗", "AUTO": "自动"}
 
         # 版本
-        self.STM_Version = "v1.10.1"
-        self.CMD_Version = "v0.1.5"
+        self.STM_Version = "v1.10.0"
 
         # 配置文件
         self.config_file = "config.json"
@@ -51,16 +50,6 @@ class MainUI(UiMixin,UpdateMixin,FluentWindow):
         self.APPDATA_ROAMING = os.getenv('APPDATA')+"\\STD Studio\\Super Toolset Manager"
 
         # 预制图标
-        # 绿色开始
-        self.PLAY_SOLID_icon = FluentIcon.PLAY_SOLID.icon(color=QColor("#00ff00"))
-        # 绿色发送
-        self.SEND_FILL_icon = FluentIcon.SEND_FILL.icon(color=QColor("#00ff00"))
-        # 红色电源
-        self.POWER_BUTTON_icon = FluentIcon.POWER_BUTTON.icon(color=QColor("#ff0000"))
-        # 红色扫把
-        self.BROOM_icon = FluentIcon.BROOM.icon(color=QColor("#ff0000"))
-        # 橙色压缩包
-        self.ZIP_FOLDER_icon = FluentIcon.ZIP_FOLDER.icon(color=QColor("#ffA500"))
         # 蓝色物联网
         self.IOT_icon = FluentIcon.IOT.icon(color=QColor("#00A5ff"))
 
@@ -201,11 +190,21 @@ class MainUI(UiMixin,UpdateMixin,FluentWindow):
         # 命令面板
         self.CommandPanel = QWidget(self)
         self.CommandPanel.setObjectName("CommandPanel")
-        self.init_command_panel()  # 初始化环境管理
+        self.init_command_panel()  # 初始化命令面板
         self.addSubInterface(
             self.CommandPanel,
             FluentIcon.COMMAND_PROMPT,
             "命令面板"
+        )
+
+        # 控制面板
+        self.ControlPanel = QWidget(self)
+        self.ControlPanel.setObjectName("ControlPanel")
+        self.init_control_panel()  # 初始化控制面板
+        self.addSubInterface(
+            self.ControlPanel,
+            FluentIcon.COMMAND_PROMPT,
+            "控制面板"
         )
 
         # 虚拟环境管理

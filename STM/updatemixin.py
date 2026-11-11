@@ -28,8 +28,6 @@ from qfluentwidgets import InfoBarPosition, InfoBar, FluentIcon, Dialog, BodyLab
 from typing import TYPE_CHECKING
 
 import tool
-from Dialog import DetailsConfigDialog, DetailsPresetScriptsDialog, DetailsPinDialog, DetailsPythonDialog, \
-    DetailsEmbDialog, DetailsVenvDialog
 
 from MetaverseSDK.MetaverseUI.MFluentWidgets.MDialog import DangerCountdownDialog, TextEditDialog, ReleaseDialog, \
     NotificationDialog
@@ -128,23 +126,6 @@ class UpdateMixin(_MixinBase):
 
         # 更新图标
         self.update_set_startup_ico_size_ico()
-
-    # 更新关闭启动延迟
-    def update_close_startup_delay(self):
-        # 设置启动页面时长
-        self.startup_animation_duration_card.setCurrentIndex(0)
-        # 手动触发槽函数
-        self.update_startup_animation_duration(0)
-
-        # 设置窗口过渡时长
-        self.transition_duration_card.setCurrentIndex(0)
-        # 手动触发槽函数
-        self.update_transition_duration(0)
-
-        # 设置启动页面过渡时长
-        self.startup_animation_transition_duration_card.setCurrentIndex(0)
-        # 手动触发槽函数
-        self.update_startup_animation_transition_duration(0)
 
     # 更新启动图标阴影
     def update_shadow(self,key):
@@ -346,76 +327,6 @@ class UpdateMixin(_MixinBase):
         JCP.update("config.json", ["setting","lazy"], key)
         self.lazy = key
 
-    # 更新音效
-    def update_play_sound(self, key):
-        self.play_sound = key
-        JCP.update("config.json", ["setting","play_sound"], key)
-
-    # 更新警告音效
-    def update_play_sound_warning(self, key):
-        self.play_sound_warning = key
-        JCP.update("config.json", ["setting","play_sound_warning"], key)
-
-    # 更新操作完成音效
-    def update_play_sound_operation_completed(self, key):
-        self.play_sound_operation_completed = key
-        JCP.update("config.json", ["setting","play_sound_operation_completed"], key)
-
-    # 更新下载完成音效
-    def update_play_sound_download_complete(self, key):
-        self.play_sound_download_complete = key
-        JCP.update("config.json", ["setting","play_sound_download_complete"], key)
-
-    # 更新提示音效
-    def update_play_sound_important_tip(self, key):
-        self.play_sound_important_tip = key
-        JCP.update("config.json", ["setting","play_sound_important_tip"], key)
-
-    # 更新动画实现的平滑滚动区域
-    def update_smooth_scrolling_area(self, key):
-        # 开启
-        if key:
-            InfoBar.info(
-                title="已开启",
-                content="将由平滑滚动区域代替滚动区域 重启生效",
-                parent=self,
-                position=InfoBarPosition.TOP,
-                duration=1500
-            )
-            JCP.update("config.json", ["setting","smooth_scrolling_area"], True)
-
-        else:
-            InfoBar.info(
-                title="已关闭",
-                content="将由滚动区域代替平滑滚动区域 重启生效",
-                parent=self,
-                position=InfoBarPosition.TOP,
-                duration=1500
-            )
-            JCP.update("config.json", ["setting","smooth_scrolling_area"], False)
-
-    # 更新上下翻页堆叠部件
-    def update_page_up_down_stacked_widget(self, key):
-        # 开启
-        if key:
-            InfoBar.info(
-                title="已开启",
-                content="将由上下翻页堆叠部件代替上下弹出堆叠部件 重启生效",
-                parent=self,
-                position=InfoBarPosition.TOP,
-                duration=1500
-            )
-
-        else:
-            InfoBar.info(
-                title="已关闭",
-                content="将由上下弹出堆叠部件代替上下翻页堆叠部件 重启生效",
-                parent=self,
-                position=InfoBarPosition.TOP,
-                duration=1500
-            )
-        JCP.update("config.json", ["setting","page_up_down_stacked_widget"], key)
-
     # 更新基础环境
     def update_python(self):
         self.python_table.setRowCount(0)
@@ -427,238 +338,6 @@ class UpdateMixin(_MixinBase):
 
         # 更新环境树
         self.update_venv_tree()
-
-    # 更新便携式环境
-    def update_emb(self):
-        self.emb_table.setRowCount(0)
-
-        # 更新表格
-        emb_json = JCP.get("config.json",["emb"])
-        for value,key in emb_json.items():
-            tool.table_add_row_5(self.emb_table, key["name"], key["version"],key["dir"],key["start_script"],str(key["pth"]),value)
-
-        # 更新环境树
-        self.update_venv_tree()
-
-    # 更新虚拟环境
-    def update_venv(self):
-        self.venv_table.setRowCount(0)
-
-        # 更新表格
-        venv_json = JCP.get("config.json",["venv"])
-        for value,key in venv_json.items():
-            tool.table_add_row_7(self.venv_table, key["name"], key["version"],key["dir"],key["cfg_file"],
-                                 key['start_parameter'],key['python'],str(key["include-system-site-packages"]),value)
-
-        # 更新环境树
-        self.update_venv_tree()
-
-    # 更新图钉
-    def update_pin(self):
-        self.pin_table.setRowCount(0)
-
-        # 更新表格
-        pin_json = JCP.get("config.json",["pin"],[]) # 默认列表
-        for key in pin_json:
-            tool.table_add_row_1(self.pin_table, key)
-
-        self.update_thumbtack_list() #更新图钉列表
-
-    # 更新预设脚本
-    def update_preset_scripts(self):
-        self.preset_scripts_table.setRowCount(0)
-
-        preset_scripts_json = JCP.get("config.json",["preset_scripts"],{}) # 默认空集合
-        for value,key in preset_scripts_json.items():
-            tool.table_add_row_4(self.preset_scripts_table, key["name"], key["description"],key["older"],str(key["parameters_dict"]),value)
-
-    # 更新配置文件
-    def update_config(self):
-        self.config_table.setRowCount(0)
-
-        config_json = JCP.get("config.json",["config"],{}) # 默认空集合
-        for value,key in config_json.items():
-            tool.table_add_row_2(self.config_table, key["name"], str(key["older_list"]),value)
-
-    # 更新配置基础环境下拉列表
-    def update_config_python_combox(self,box):
-        box.clear()
-
-        for row in range(self.python_table.rowCount()):
-            item_col0 = self.python_table.item(row, 0)  # 第1列
-            item_col3 = self.python_table.item(row, 3)  # 第4列
-
-            if item_col3 is not None and item_col0 is not None:
-                box.addItem(f"{item_col0.text()}    {item_col3.text()}", SIP.get("Python"),userData=item_col3.text())
-
-        box.setCurrentIndex(-1) # 取消选中
-
-        # 更新命令
-        self.update_config_venv_command()
-
-    # 更新配置文件下拉列表
-    def update_config_combox(self,box):
-        box.clear()
-
-        for row in range(self.config_table.rowCount()):
-            item_col0 = self.config_table.item(row, 0)  # 第1列
-
-            if item_col0 is not None:
-                # 存储的父级
-                box.addItem(item_col0.text(), FluentIcon.DOCUMENT,userData=item_col0.data(Qt.UserRole))
-
-        box.setCurrentIndex(-1) # 取消选中
-
-    # 更新配置启动参数
-    def update_config_start_parameter(self, text):
-        # 不为空
-        if text != "":
-            if text.endswith("/") or text.endswith("\\"):  # 以/\结尾
-                self.config_startup_parameters_line.setText(text + "Scripts/activate")
-            else:
-                self.config_startup_parameters_line.setText(text + "/Scripts/activate")
-
-        # 否则重置
-        else:
-            self.config_startup_parameters_line.setText("")
-
-        # 最后刷新 防止停滞
-        # 刷新命令
-        self.update_config_venv_command()
-
-    # 刷新配置虚拟环境命令
-    def update_config_venv_command(self):
-        # 选中基础解释器
-        if self.config_base_python_box.text() != "":
-            # 基础命令
-            if not self.config_custom_prompts_prefix_box.isChecked():
-                base = f'"{self.config_base_python_box.text()}" -m venv "{self.config_venv_Loca_line.text()}"'
-            else:
-                base = f'"{self.config_base_python_box.text()}" -m venv "{self.config_venv_Loca_line.text()}" --prompt "{self.config_prompts_prefix_line.text()}"' # 提示符命令
-            # 将列表元素用空格连接
-            params_str = ' '.join(self.config_python_batch_list)
-            full_cmd = f"{base} {params_str}" if params_str else base
-
-            self.config_created_parameter_line.setText(full_cmd)
-        # 否则清空
-        else:
-            self.config_created_parameter_line.setText("")
-
-    # 基础环境详情
-    def details_python(self):
-        # 获取当前所在行第0列item
-        item = self.python_table.item(self.python_table.currentRow(), 0)
-        # 获取json
-        json_data = JCP.get("config.json",["python",item.data(Qt.UserRole)])
-
-        dialog = DetailsPythonDialog("详情",SIP.get("Python"),
-                                     "Python 基础环境",
-                                     f"环境名称 {json_data['name']}",
-                                     f"解释器版本 {json_data['version']}",
-                                     f"环境路径 {json_data['dir']}",
-                                     f"解释器路径 {json_data['path']}",self)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
-
-    # 便携式环境详情
-    def details_emb(self):
-        # 获取当前所在行第0列item
-        item = self.emb_table.item(self.emb_table.currentRow(), 0)
-        # 获取json
-        json_data = JCP.get("config.json",["emb",item.data(Qt.UserRole)])
-
-        dialog = DetailsEmbDialog("详情",self.ZIP_FOLDER_icon,
-                                                           "Python Emb便携式环境",
-                                                           f"环境名称 {json_data['name']}",
-                                                           f"解释器版本 {json_data['version']}",
-                                                           f"环境路径 {json_data['dir']}",
-                                                           f"启动脚本路径 {json_data['start_script']}",
-                                                           f"第三方库解锁 {json_data['pth']}",self)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
-
-    # 虚拟环境详情
-    def details_venv(self):
-        # 获取当前所在行第0列item
-        item = self.venv_table.item(self.venv_table.currentRow(), 0)
-        # 获取json
-        json_data = JCP.get("config.json",["venv",item.data(Qt.UserRole)])
-
-        dialog = DetailsVenvDialog("详情",self.IOT_icon,
-                                                         "Python Venv虚拟环境",
-                                                         f"环境名称 {json_data['name']}",
-                                                         f"解释器版本 {json_data['version']}",
-                                                         f"环境路径 {json_data['dir']}",
-                                                         f"配置路径 {json_data['cfg_file']}",
-                                                         f"启动参数 {json_data['start_parameter']}",
-                                                         f"基础环境路径 {json_data['python']}",
-                                                         f"继承全局包 {json_data['include-system-site-packages']}",self)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
-
-    # 图钉详情
-    def details_pin(self):
-        # 获取json
-        json_data = JCP.get("config.json",["pin"])[self.pin_table.currentRow()]
-
-        dialog = DetailsPinDialog("详情",FluentIcon.PIN,
-                                 "VEM 图钉",
-                                 f"图钉命令 {json_data}",self)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
-
-    # 预设脚本详情
-    def details_preset_scripts(self):
-        # 获取当前所在行第0列item
-        item = self.preset_scripts_table.item(self.preset_scripts_table.currentRow(), 0)
-        # 获取json
-        json_data = JCP.get("config.json",["preset_scripts",item.data(Qt.UserRole)])
-
-        dialog = DetailsPresetScriptsDialog("详情",FluentIcon.QUICK_NOTE,
-                                                         "VEM 预设脚本",
-                                                         f"预设名称 {json_data['name']}",
-                                                         f"预设描述 {json_data['description']}",
-                                                         f"原始命令 {json_data['older']}","参数字典",self)
-        for t in json_data['parameters_dict']:
-            dialog.textedit.append(f"{t} : {json_data['parameters_dict'][t]}")
-        # 移动光标到文档最开头
-        cursor = dialog.textedit.textCursor()
-        cursor.setPosition(0)
-        dialog.textedit.setTextCursor(cursor)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
-
-    # 配置文件详情
-    def details_config(self):
-        # 获取当前所在行第0列item
-        item = self.config_table.item(self.config_table.currentRow(), 0)
-        # 获取json
-        json_data = JCP.get("config.json",["config",item.data(Qt.UserRole)])
-
-        dialog = DetailsConfigDialog("详情",FluentIcon.DOCUMENT,
-                                                         "VEM 配置文件",
-                                                         f"配置名称 {json_data['name']}",
-                                                         f"命令列表",self)
-        for t in json_data['older_list']:
-            dialog.textedit.append(t)
-        # 移动光标到文档最开头
-        cursor = dialog.textedit.textCursor()
-        cursor.setPosition(0)
-        dialog.textedit.setTextCursor(cursor)
-        if dialog.exec():
-            # 销毁
-            dialog.accept()
-            dialog.deleteLater()
 
     # 更新窗口过渡时长
     def update_transition_duration(self,index):
@@ -861,10 +540,6 @@ class UpdateMixin(_MixinBase):
             self.new_version_state_tooltip.setTitle("获取成功")
             self.new_version_state_tooltip.setState(True)
 
-            # 播放音效 操作完成音效未禁用
-            if self.play_sound and not self.play_sound_operation_completed:
-                BSP.play("OperationCompleted")
-
             # 找到新版本
             if Version(self.VEM_Version) < Version(release["version"]):
                 self.new_version_state_tooltip.setContent("找到新版本")
@@ -892,22 +567,6 @@ class UpdateMixin(_MixinBase):
     def update_config_file_protect(self,key):
         self.config_file_protect = key
         JCP.update("config.json", ["setting","config_file_protect"], key)
-
-    # 更新演示模式
-    def update_demo_mode(self,key):
-        if key:
-            dialog = Dialog("是否立即将池保存到配置?", "请注意 当前改动并未保存\n\n演示模式仅在当前生效一次 如需持久化生效需立即将池落盘"
-                                                       "\n是否将池落盘 否则演示模式仅生效一次", self)
-            if dialog.exec():
-                # 立即保存
-                JCP.update("config.json", ["setting", "demo_mode"], key)
-                # 落盘
-                self.write_disk_pool()
-
-            self.demo_mode = key
-        else:
-            self.demo_mode = key
-            JCP.update("config.json", ["setting", "demo_mode"], key)
 
     # 更新备份路径
     def update_backup_path(self):
