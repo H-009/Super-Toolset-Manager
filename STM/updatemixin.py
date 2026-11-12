@@ -614,21 +614,6 @@ class UpdateMixin(_MixinBase):
 
         w.exec()
 
-    # 打开CMD池
-    def open_cmd_pool(self):
-        w = TextEditDialog(
-            title='CMD池',
-            content="查看在内存中的CMD池",
-            parent=self
-        )
-
-        w.line.setText(str(self.cmd_obj_dict)+"\n"+str(self.console_obj_dict))
-        w.line.setReadOnly(True)
-        w.cancelButton.hide()
-        w.line.setFixedSize(800,500)
-
-        w.exec()
-
     # 打开图标池
     def open_bip_pool(self):
         w = TextEditDialog(

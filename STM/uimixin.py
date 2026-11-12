@@ -216,10 +216,10 @@ class UiMixin(_MixinBase):
         created_vlayout.addWidget(card)  # 嵌入到布局
         # 创建导航栏
         self.create_navigation = Pivot()  # 简单卡片
-        self.create_navigation.addItem('虚拟环境', "虚拟环境")
-        self.create_navigation.addItem('便携式环境', "便携式环境")
-        self.create_navigation.addItem('基础环境', "基础环境")
-        self.create_navigation.addItem('配置文件', "配置文件")
+        self.create_navigation.addItem('工具', "工具")
+        self.create_navigation.addItem('工具包', "工具包")
+        self.create_navigation.addItem('工具链', "工具链")
+        self.create_navigation.addItem('工具集', "工具集")
         self.create_navigation.addItem('预设脚本', "预设脚本")
         self.create_navigation.addItem('图钉', "图钉")
         self.create_navigation.setCurrentItem('虚拟环境')
@@ -230,111 +230,6 @@ class UiMixin(_MixinBase):
         # 堆叠创建窗口
         self.created_stacked = PageLeftRightStackedWidget()
         created_vlayout.addWidget(self.created_stacked)  # 嵌入到布局
-
-        # 创建虚拟环境
-        card = SimpleCardWidget()
-        layout = QVBoxLayout()
-        card.setLayout(layout)
-        # 标题间隔弹簧
-        layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
-        title_layout = QHBoxLayout() # 标题布局
-        title_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Fixed)) # 居中弹簧
-        ico_widget = IconWidget(FluentIcon.IOT) # 图标
-        ico_widget.setFixedSize(24,24)
-        title_layout.addWidget(ico_widget)
-        title_layout.addWidget(TitleLabel("创建虚拟环境"))
-        title_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Fixed)) # 居中弹簧
-        layout.addLayout(title_layout) # 添加标题布局
-        # 标题间隔弹簧
-        layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
-        # 分段导航栏
-        segmented = SegmentedWidget()
-        segmented.addItem("现有","现有")
-        segmented.addItem("新建","新建")
-        segmented.addItem("配置","配置")
-        segmented.setCurrentItem("现有") # 默认选中
-        segmented.currentItemChanged.connect(self.segmented_stacked_update)
-        layout.addWidget(segmented,alignment=Qt.AlignHCenter)
-        # 子堆叠窗口
-        self.segmented_venv_stacked = PopUpAniStackedWidget()
-        layout.addWidget(self.segmented_venv_stacked)
-        # 新建卡片
-        new_card = SimpleCardWidget()
-        new_card_external_layout = QVBoxLayout() # 外部布局
-        new_card_layout = QGridLayout() # 格栅布局
-        new_card.setLayout(new_card_external_layout)
-        new_card_external_layout.addLayout(new_card_layout) # 外部布局添加格栅布局
-        self.venv_loca_name = LineEdit() # 行输入框
-        self.venv_loca_name.setPlaceholderText("venv")
-        new_card_layout.addWidget(BodyLabel("环境名称:"),0,0)
-        new_card_layout.addWidget(self.venv_loca_name,0,1,1,2)
-        self.venv_loca_line = LineEdit() # 行输入框
-        self.venv_loca_line.setPlaceholderText(".venvs/venv")
-        self.venv_loca_button = ToolButton(FluentIcon.FOLDER) # 图标按钮
-        new_card_layout.setColumnStretch(1, 1) # 伸缩 第一列吃掉剩下空间
-        new_card_layout.addWidget(BodyLabel("环境位置:"),1,0)
-        new_card_layout.addWidget(self.venv_loca_line,1,1)
-        new_card_layout.addWidget(self.venv_loca_button,1,2)
-        self.base_python_box = ComboBox() # 下拉框
-        self.base_python_box.clicked.connect(lambda :self.update_python_combox(self.base_python_box)) # 下拉列表点击信号
-        self.base_python_box.activated.connect(lambda :self.base_python_box.setText(self.base_python_box.currentData())) # 选中信号
-        new_card_layout.addWidget(BodyLabel("基础解释器:"),2,0)
-        new_card_layout.addWidget(self.base_python_box,2,1,1,2)
-        self.inherits_global_site_software_packages_box = CheckBox() # 继承全局站点软件包 复选框
-        self.inherits_global_site_software_packages_box.setText("继承全局站点软件包")
-        self.inherits_global_site_software_packages_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--system-site-packages"))
-        new_card_layout.addWidget(self.inherits_global_site_software_packages_box,3,0,1,3)  # 跨行
-        self.try_using_symbolic_links_box = CheckBox() # 尝试使用符号链接 复选框
-        self.try_using_symbolic_links_box.setText("尝试使用符号链接")
-        self.try_using_symbolic_links_box.stateChanged.connect(lambda s:self.forced_file_copying_box.setEnabled(not s))
-        self.try_using_symbolic_links_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--symlinks"))
-        new_card_layout.addWidget(self.try_using_symbolic_links_box,4,0,1,3)  # 跨行
-        self.forced_file_copying_box = CheckBox() # 强制复制文件 复选框
-        self.forced_file_copying_box.setText("强制复制文件")
-        self.forced_file_copying_box.stateChanged.connect(lambda s:self.try_using_symbolic_links_box.setEnabled(not s))
-        self.forced_file_copying_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--copies"))
-        new_card_layout.addWidget(self.forced_file_copying_box,5,0,1,3)  # 跨行
-        self.clear_existing_directories_box = CheckBox() # 清空已存在目录 复选框
-        self.clear_existing_directories_box.setText("清空已存在目录")
-        self.clear_existing_directories_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--clear"))
-        new_card_layout.addWidget(self.clear_existing_directories_box,6,0,1,3)  # 跨行
-        self.upgrade_package_box = CheckBox() # 升级软件包 复选框
-        self.upgrade_package_box.setText("升级软件包")
-        self.upgrade_package_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--upgrade"))
-        new_card_layout.addWidget(self.upgrade_package_box,7,0,1,3)  # 跨行
-        self.skip_installing_pip_box = CheckBox() # 跳过安装pip 复选框
-        self.skip_installing_pip_box.setText("跳过安装pip")
-        self.skip_installing_pip_box.stateChanged.connect(lambda s:self.skip_installing_pip_mutual_exclusion(s))
-        self.skip_installing_pip_box.stateChanged.connect(lambda state: self.venv_command_batch(state,"--without-pip"))
-        new_card_layout.addWidget(self.skip_installing_pip_box,8,0,1,3)  # 跨行
-        self.custom_prompts_prefix_box = CheckBox() # 自定义提示符前缀 复选框
-        self.custom_prompts_prefix_box.setText("自定义提示符前缀")
-        self.custom_prompts_prefix_box.stateChanged.connect(lambda s:self.prompts_prefix_line.setEnabled(s))
-        new_card_layout.addWidget(self.custom_prompts_prefix_box,9,0,1,3)  # 跨行
-        self.prompts_prefix_line = LineEdit() # 行输入框
-        self.prompts_prefix_line.setPlaceholderText("venv")
-        self.prompts_prefix_line.setEnabled(False)
-        self.venv_startup_parameters_line = LineEdit() # 行输入框
-        new_card_layout.addWidget(BodyLabel("提示符前缀:"),10,0) # 跨行
-        new_card_layout.addWidget(self.prompts_prefix_line,10,1,1,3) # 跨行
-        new_card_layout.addWidget(BodyLabel("启动参数:"),11,0) # 跨行
-        new_card_layout.addWidget(self.venv_startup_parameters_line,11,1,1,3) # 跨行
-        new_card_layout.addWidget(BodyLabel("创建命令:"),12,0)
-        self.created_parameter_line = LineEdit() # 行输入框
-        self.created_parameter_line.setPlaceholderText("python -m venv")
-        new_card_layout.addWidget(self.created_parameter_line, 12, 1, 1, 2)  # 跨行
-        button_layout = QHBoxLayout() # 按钮布局
-        self.created_new_venv = PrimaryPushButton("创建")# 添加现有按钮
-        self.created_new_venv.setFixedSize(100,30)
-        self.reset_new_venv = PushButton("重置")# 重置现有按钮
-        self.reset_new_venv.setFixedSize(100,30)
-        button_layout.addItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Fixed))# 间隔调小 防止撑开主窗口
-        button_layout.addWidget(self.created_new_venv)
-        button_layout.addWidget(self.reset_new_venv)
-        button_layout.addItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Fixed))# 水平居中弹簧
-        new_card_external_layout.addLayout(button_layout)
-        new_card_external_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Expanding))  # 底部弹簧
-        self.segmented_venv_stacked.addWidget(new_card) # 添加新建页
 
         # 添加便携式环境
         card = SimpleCardWidget()
@@ -821,10 +716,6 @@ class UiMixin(_MixinBase):
         # 配置池卡片
         card = LayoutButtonSettingCard(MetaverseFluentIcon.InternalData,"配置池","打开配置池","打开")
         card.clickedChanged.connect(self.open_jcp_pool)
-        self.setting_view_layout.addWidget(card)
-        # CMD池卡片
-        card = LayoutButtonSettingCard(MetaverseFluentIcon.InternalData,"CMD池","打开CMD池","打开")
-        card.clickedChanged.connect(self.open_cmd_pool)
         self.setting_view_layout.addWidget(card)
         # 图标池卡片
         card = LayoutButtonSettingCard(MetaverseFluentIcon.InternalData,"图标池","打开图标池","打开")
